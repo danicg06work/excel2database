@@ -10,4 +10,23 @@ public class TableModel {
     private final String name;
     private final List<FieldModel> fields = new ArrayList<>();
 
+    public TableModel(String name) {
+        this.name = name;
+    }
+
+    public void addField(FieldModel field){
+        fields.add(field);
+    }
+
+
+    public String getName() {
+        return this.name;
+    }
+
+
+    public List<FieldModel> getFields() {
+        return this.fields;
+    }
+
+
 }

@@ -1,8 +1,13 @@
 package com.iesvdc.dam.acceso;
 
+import java.beans.Statement;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 
 import com.iesvdc.dam.acceso.conexion.Conexion;
+import com.iesvdc.dam.acceso.excelutil.ExcelReader;
+import com.iesvdc.dam.acceso.modelo.TableModel;
+import com.iesvdc.dam.acceso.modelo.WorkbookModel;
 
 /**
  * Este programa genérico en java (proyecto Maven) es un ejercicio 
@@ -22,24 +27,28 @@ import com.iesvdc.dam.acceso.conexion.Conexion;
  */
 public class Excel2Database 
 {
-    public static void main( String[] args )
+        public static void main( String[] args )
     {                
-
         try (Connection conexion = Conexion.getConnection()) {
-            if (conexion!=null) 
+            if (conexion!=null) {
                 System.out.println("Conectado correctamente.");
-            else 
+            }
+            else {
                 System.out.println("Imposible conectar");
+            }
+            //Ahora creo el objeto ExcelReader y ejecuto la setencia sql
+            WorkbookModel workbook = ExcelReader.leerExcel();
+            for (TableModel tabla : workbook.getTables()) {
+                //Muestro el nombre de la tabla que voy a crear
+                System.out.println("Creando la tabla: "+tabla.getName());
+                String setenciaSql = "CREATE TABLE `"+tabla.getName()+"` (  `id` int NOT NULL);";
+                PreparedStatement ps = conexion.prepareStatement(setenciaSql);
+                ps.executeUpdate(); 
+            }
+
         } catch (Exception e) {
-            System.err.println("No se pudo conectar.");            
-        }
-
-    
-                
-
-        
+            System.err.println("No se pudo conectar o la tabla ya esta creada");            
+        }                    
     }
-
-
 }
 

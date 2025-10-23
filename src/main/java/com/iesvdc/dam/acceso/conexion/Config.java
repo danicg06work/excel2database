@@ -41,7 +41,6 @@ public class Config {
                 "Error al leer el fichero de propiedades: " +
                 ioe.getLocalizedMessage());
         }
-        
         return props;
     }
 }
