@@ -1,33 +1,22 @@
 package com.iesvdc.dam.acceso.excelutil;
 
-import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Properties;
-
-import javax.imageio.IIOException;
-
-import org.apache.poi.ss.usermodel.Sheet;
-
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
 import com.iesvdc.dam.acceso.conexion.Config;
-import com.iesvdc.dam.acceso.modelo.TableModel;
-import com.iesvdc.dam.acceso.modelo.WorkbookModel;
+
 
 public class ExcelReader {
-    public static WorkbookModel leerExcel(){
-        WorkbookModel wm1 = new WorkbookModel();
+    public static XSSFWorkbook leerExcel(){
         Properties propiedades = Config.getProperties("config.properties");
-        String path = propiedades.getProperty("inputFile");
-            try {
-                FileInputStream fichero = new FileInputStream(path);
-                XSSFWorkbook wb = new XSSFWorkbook(fichero); 
-                for (Sheet hoja : wb) {
-                    TableModel tabla = new TableModel(hoja.getSheetName());  
-                    wm1.addTabla(tabla);
-                }
-            } catch (Exception e) {
-                throw new RuntimeException("te da excepción, codigo: " + e);
-            }
-        return wm1;
+        String fichero = propiedades.getProperty("inputFile");
+        XSSFWorkbook wb = null;
+        try {
+            wb = new XSSFWorkbook(fichero);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } 
+        return wb;
     }
 }
