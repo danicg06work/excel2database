@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -35,121 +36,33 @@ import com.iesvdc.dam.acceso.modelo.WorkbookModel;
 public class Excel2Database {
     public static void main(String[] args) {
         try (Connection conexion = Conexion.getConnection()) {
+            //Compruebo la conexion
             if (conexion != null) {
                 System.out.println("Conectado correctamente.");
             } else {
                 System.out.println("Imposible conectar");
             }
-            // Ahora creo el objeto ExcelReader y ejecuto la setencia sql en bucles anidados
-            // usando un stringbuilder
-
-            XSSFWorkbook excel = ExcelReader.leerExcel();
-            for (int i = 0; i < excel.getNumberOfSheets(); i++) {
-                Sheet hoja = excel.getSheetAt(i);
-                System.out.println("Añadiendo tabla: " + hoja.getSheetName());
-
-                // Empiezo a crear la setencia con Stringbuilder
-                // Se que es un poco loco lo que he hecho pero funciona
-                StringBuilder sb = new StringBuilder();
-                Row fila = hoja.getRow(0);
-                Row fila2 = hoja.getRow(1);
-                int contador = 0;
-                sb.append("CREATE TABLE `").append(hoja.getSheetName()).append("` ( ");
-                for (Cell celda : fila) {
-                    // Esto if es para que ponga la coma menos en la primera columna
-                    if (contador != 0) {
-                        sb.append(", ");
-                    }
-                    // Este append meta la columna
-                    sb.append("`").append(celda.getStringCellValue()).append("` ");
-                    // Ahora para meterle segun el tipo de dato
-                    Cell dato = fila2.getCell(contador);
-                    switch (dato.getCellType()) {
-                        case BOOLEAN:
-                            sb.append("tinyint(1)");
-                            break;
-                        case NUMERIC:
-                            double numero = dato.getNumericCellValue();
-                            if (numero == Math.floor(numero)) {
-                                sb.append("INT (20)");
-                            } else {
-                                sb.append("decimal(20,2)");
-                            }
-                            break;
-                        default:
-                            sb.append("varchar(100)");
-                            break;
-                    }
-                    contador++;
-                }
-                sb.append("); ");
-
-                // Ejecuto la setencia para crear la tabla:
-
-                PreparedStatement ps = conexion.prepareStatement(sb.toString());
-                ps.executeUpdate();
-
-
-                
-                // Ahora hago el insert de la tabla de los datos:
-             StringBuilder insert = new StringBuilder();
-                insert.append("INSERT INTO `").append(hoja.getSheetName()).append("` (");
-
-                
-                for (int c = 0; c < fila.getLastCellNum(); c++) {
-                    if (c != 0) insert.append(", ");
-                    insert.append("`").append(fila.getCell(c).getStringCellValue()).append("`");
-                }
-                insert.append(") VALUES ");
-
-                
-                boolean primeraFila = true;
-                for (int r = 1; r <= hoja.getLastRowNum(); r++) {
-                    Row filaDatos = hoja.getRow(r);
-                    
-
-                    if (!primeraFila) insert.append(", ");
-                    insert.append("(");
-
-                    for (int c = 0; c < filaDatos.getLastCellNum(); c++) {
-                        if (c != 0) insert.append(", ");
-                        Cell celda = filaDatos.getCell(c);
-
-                        if (celda == null) {
-                            insert.append("NULL");
-                            continue;
-                        }
-
-                        switch (celda.getCellType()) {
-                            case BOOLEAN:
-                                insert.append(celda.getBooleanCellValue() ? 1 : 0);
-                                break;
-                            case NUMERIC:
-                                insert.append(celda.getNumericCellValue());
-                                break;
-                            default:
-                                insert.append("'")
-                                      .append(celda.getStringCellValue().replace("'", "''"))
-                                      .append("'");
-                                break;
-                        }
-                    }
-
-                    insert.append(")");
-                    primeraFila = false;
-                }
-
-                insert.append(";");
-                PreparedStatement psInsert = conexion.prepareStatement(insert.toString());
-                psInsert.executeUpdate();
-                System.out.println("Insertando datos de" + hoja.getSheetName());
-
+            //Le pregunto al usuario que quiere
+            System.out.println("Que quieres hacer? \n1.Insertar en la bd (1)\n2.Crear excel de la bs (2)");
+            Scanner inputUsuario = new Scanner(System.in);
+            switch (inputUsuario.nextLine()) {
+                case "1":
+                    ExcelReader.insertarWorkbook(conexion,ExcelReader.leerExcel());
+                    break;
+                case "2":
+                    System.out.println("Opcion no disponible en este momento");
+                    break;
+                default:
+                System.out.println("Saliendo . . .");
+                    break;
             }
-
+            
         } catch (Exception e) {
             System.out.println("ERROR AQUI:");
             e.printStackTrace();
         }
+
+        
     }
 }
 
