@@ -7,23 +7,33 @@ Este programa genérico en java (proyecto Maven) es un ejercicio simple que vuel
 Procesamos el fichero Excel y creamos una estructura de datos con la información siguiente: La estructura principal es el libro, que contiene una lista de tablas y cada tabla contiene tuplas nombre del campo y tipo de dato.
 
 
+# Instalación
+1. Nos bajamos la carpeta del repositorio.
+
+2. Instalamos la ultima version del jdk, docker y visual estudio code si no lo tenemos.
+
+3. Inicamos la base de datos dockerizada (tenemos un docker compose y un init.sql) para hacer esto mas facil.
+
+4. En la carpeta datos metemos nuestro fichero xlsx para pasarlo a la base de datos.
+
+5. En archivo config.properties , en el apartado inputFile ponemos la ruta relativa del xlsx, sera algo como "datos/ejemplo.xlsx"
+
+6. Una vez hecho esto deveremos ejecutar la clase Excel2Database.java.
+
 Uso del programa:
 
-```bash
-excel2database -f fichero.xlsx -db agenda
+```bash 
+    Nos preguntara si queremos insertar o extraer de la base de datos.
+        Si seleccioanmso insertar , insertara el xlsx que le hemos pasado,
+        si seleccionamos importar metera toda la base de datos en un archivo
+        xlsx llamado agenda que estara en la carpeta datos.
 ```
 
-## Instalando Java para que funcione
 
 
 
-## Cómo crear este proyecto maven desde cero
 
-Instalamos las dependencias Maven:
 
-* apache poi
-* apache poi ooxml
-* mysql 
 
 ## El archivo de propiedades
 

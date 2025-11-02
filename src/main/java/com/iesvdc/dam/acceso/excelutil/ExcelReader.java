@@ -4,13 +4,10 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.Properties;
-
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-import com.iesvdc.dam.acceso.conexion.Conexion;
 import com.iesvdc.dam.acceso.conexion.Config;
 
 
@@ -36,7 +33,7 @@ public class ExcelReader {
             // Ahora creo el objeto ExcelReader y ejecuto la setencia sql en bucles anidados
             // usando un stringbuilder
 
-            XSSFWorkbook excel = ExcelReader.leerExcel();
+            XSSFWorkbook excel = xssfworkbook;
             for (int i = 0; i < excel.getNumberOfSheets(); i++) {
                 Sheet hoja = excel.getSheetAt(i);
                 System.out.println("Añadiendo tabla: " + hoja.getSheetName());
@@ -112,7 +109,7 @@ public class ExcelReader {
                             insert.append("NULL");
                             continue;
                         }
-
+                        
                         switch (celda.getCellType()) {
                             case BOOLEAN:
                                 insert.append(celda.getBooleanCellValue() ? 1 : 0);
@@ -122,7 +119,7 @@ public class ExcelReader {
                                 break;
                             default:
                                 insert.append("'")
-                                      .append(celda.getStringCellValue().replace("'", "''"))
+                                      .append(celda.getStringCellValue())
                                       .append("'");
                                 break;
                         }
@@ -140,7 +137,7 @@ public class ExcelReader {
             }
 
         } catch (Exception e) {
-            System.out.println("ERROR AQUI:");
+            System.out.println("ERROR AQUI:, LA TABLA/S YA EXISTEN ");
             e.printStackTrace();
         }
     }

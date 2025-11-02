@@ -1,21 +1,11 @@
 package com.iesvdc.dam.acceso;
 
-import java.sql.Statement;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
-
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
 import com.iesvdc.dam.acceso.conexion.Conexion;
 import com.iesvdc.dam.acceso.excelutil.ExcelReader;
-import com.iesvdc.dam.acceso.modelo.TableModel;
-import com.iesvdc.dam.acceso.modelo.WorkbookModel;
+import com.iesvdc.dam.acceso.excelutil.ExcelWriter;
+
 
 /**
  * Este programa genérico en java (proyecto Maven) es un ejercicio
@@ -50,7 +40,8 @@ public class Excel2Database {
                     ExcelReader.insertarWorkbook(conexion,ExcelReader.leerExcel());
                     break;
                 case "2":
-                    System.out.println("Opcion no disponible en este momento");
+                    ExcelWriter ew = new ExcelWriter(conexion);
+                    ew.writeExcel();
                     break;
                 default:
                 System.out.println("Saliendo . . .");
@@ -58,7 +49,7 @@ public class Excel2Database {
             }
             
         } catch (Exception e) {
-            System.out.println("ERROR AQUI:");
+            System.out.println("ERROR AQUI:  EL ARCHIVO XLSX NO EXISTE O ESTA MAL");
             e.printStackTrace();
         }
 
