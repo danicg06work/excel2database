@@ -48,9 +48,9 @@ public class ExcelWriter {
                 //System.out.println(numeroCol);
 
                 //Escribir cabezeras
-                Row capezera = tabla.createRow(0);
+                Row cabezera = tabla.createRow(0);
                 for (int i = 1; i <= numeroCol; i++) {
-                    capezera.createCell(i - 1).setCellValue(metaDatos.getColumnName(i));
+                    cabezera.createCell(i - 1).setCellValue(metaDatos.getColumnName(i));
                 }
 
                 //Escribir datos
